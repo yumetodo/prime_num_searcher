@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using OxyPlot.Series;
+using System.Threading;
 
 namespace prime_num_searcher_gui
 {
@@ -29,33 +30,79 @@ namespace prime_num_searcher_gui
             {"forno_method", new List<ScatterPoint> { } }
         };
         public bool IsExecutable { get; private set; } = true;
+        public bool IsPaused { get; private set; } = false;
+        private Dictionary<string, List<ScatterPoint>> tmpResult;
+        private SemaphoreSlim notifyResume = new SemaphoreSlim(1,1);
+        private bool notifyStop = false;
         public async Task<Dictionary<string, List<ScatterPoint>>> Execute(UInt64 maxNum, UInt64 interval, Action<UInt64> onProgressChange)
         {
-            var re = CreateResultDictionary();
-            if (!IsExecutable) return re;
+            if (!IsExecutable) return CreateResultDictionary();
+            this.notifyStop = false;
+            this.tmpResult = CreateResultDictionary();
             IsExecutable = false;
             try
             {
                 UInt64 count = 1;
                 Action<UInt64, List<KeyValuePair<string, UInt64>>> convert = (UInt64 i, List<KeyValuePair<string, UInt64>> runResults) =>
                 {
-                    foreach (var p in runResults)
+                    try
                     {
-                        re[p.Key].Add(new ScatterPoint(i, p.Value) { Value = 0 });
+                        foreach (var p in runResults)
+                        {
+                            this.tmpResult[p.Key].Add(new ScatterPoint(i, p.Value) { Value = 0 });
+                        }
+                        onProgressChange(count);
                     }
-                    onProgressChange(count);
+                    finally
+                    {
+                        this.notifyResume.Release();
+                    }
                 };
                 for (UInt64 i = 2; i < maxNum; i += interval, ++count)
                 {
+                    //When this.Resume() was called, this SemaphoreSlim will block until this.NotifyRestart() was called.
+                    await notifyResume.WaitAsync().ConfigureAwait(false);
+                    if (this.notifyStop)
+                    {
+                        this.notifyResume.Release();
+                        return this.tmpResult;
+                    }
                     convert(i, await this.Run(i));
                 }
+                //When this.Resume() was called, this SemaphoreSlim will block until this.NotifyRestart() was called.
+                await notifyResume.WaitAsync().ConfigureAwait(false);
                 convert(maxNum, await this.Run(maxNum));
             }
             finally
             {
-                IsExecutable = true;
+                this.IsExecutable = true;
             }
-            return re;
+            return this.tmpResult;
+        }
+        public async Task<Dictionary<string, List<ScatterPoint>>> Pasue()
+        {
+            if(IsExecutable) return CreateResultDictionary();
+            this.IsPaused = true;
+            await notifyResume.WaitAsync().ConfigureAwait(false);
+            return this.tmpResult;
+        }
+        public void NotifyResume()
+        {
+            if (!IsExecutable && IsPaused)
+            {
+                notifyResume.Release();
+                this.IsPaused = false;
+            }
+        }
+        public void NotifyStop()
+        {
+            if (!IsExecutable)
+            {
+                //if(!IsPaused) await notifyResume.WaitAsync().ConfigureAwait(false);
+                notifyStop = true;
+                if (IsPaused) notifyResume.Release();
+                this.IsPaused = false;
+            }
         }
     }
 }

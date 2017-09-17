@@ -35,7 +35,7 @@ namespace prime_num_searcher_gui
             this.DataContext = this.benchmarkResultManager_;
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void BenchmarkButtonClick(object sender, RoutedEventArgs e)
         {
             this.benchmarkResultManager_.BeforeStartBenchmark();
             try
@@ -53,6 +53,45 @@ namespace prime_num_searcher_gui
             finally
             {
                 this.benchmarkResultManager_.AfterFinishBenchmark();
+            }
+        }
+
+        private async void PauseButtonClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.benchmarkResultManager_.PlotSources = await this.benchmarkExecuter_.Pasue();
+                this.benchmarkResultManager_.BenchmarkStatus = Status.Paused;
+            }
+            catch(Exception ex)
+            {
+                this.benchmarkResultManager_.NotifyError(ex.ToString());
+            }
+        }
+
+        private void ResumeButtonClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.benchmarkExecuter_.NotifyResume();
+                this.benchmarkResultManager_.BenchmarkStatus = Status.Benchmarking;
+            }
+            catch (Exception ex)
+            {
+                this.benchmarkResultManager_.NotifyError(ex.ToString());
+            }
+        }
+
+        private void StopButtonClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.benchmarkExecuter_.NotifyStop();
+                //this.benchmarkResultManager_.BenchmarkStatus = Status.None;
+            }
+            catch (Exception ex)
+            {
+                this.benchmarkResultManager_.NotifyError(ex.ToString());
             }
         }
     }

@@ -7,14 +7,14 @@
         xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
         mc:Ignorable="d"
         Title="PrimeNumSearchBenchmark"
-        Height="408" Width="640" MinHeight="408" MinWidth="408"
+        Height="408" Width="760" MinHeight="428" MinWidth="408"
         Loaded="Window_Loaded"
         FontFamily="Yu Gothic Medium">
     <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="5"/><!-- ProgressBar -->
+            <RowDefinition Height="5"/><!-- ProgressBar760 -->
             <RowDefinition Height="26"/><!-- StatusBar -->
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
@@ -25,7 +25,12 @@
                         <Trigger Property="Validation.HasError" Value="True">
                             <Setter Property="ToolTip">
                                 <Setter.Value>
-                                    <ToolTip DataContext="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget}">
+                                    <ToolTip>
+                                        <ToolTip.DataContext>
+                                            <Binding
+                                                RelativeSource="{RelativeSource Self}"
+                                                Path="PlacementTarget"/>
+                                        </ToolTip.DataContext>
                                         <ItemsControl
                                             ItemsSource="{Binding Path=(Validation.Errors)}"
                                             DisplayMemberPath="ErrorContent"/>
@@ -37,10 +42,25 @@
                 </Style>
             </StackPanel.Resources>
             <TextBlock TextWrapping="Wrap" Margin="5" Text="求める素数の最大値"/>
-            <TextBox Text="{Binding ReserchMaxNum}" Margin="5" Width="55" Style="{StaticResource ValidatableTextBox}"/>
+            <TextBox
+                Text="{Binding ReserchMaxNum}" Margin="5" Width="55"
+                Style="{StaticResource ValidatableTextBox}"/>
             <TextBlock TextWrapping="Wrap" Margin="5" Text="探索間隔"/>
-            <TextBox Text="{Binding Interval}" Margin="5" Width="55" Style="{StaticResource ValidatableTextBox}"/>
-            <Button Content="Benchmark" Margin="5" Width="75" Click="Button_Click" IsEnabled="{Binding IsNotBenchmarking}"/>
+            <TextBox
+                Text="{Binding Interval}" Margin="5" Width="55"
+                Style="{StaticResource ValidatableTextBox}"/>
+            <Button
+                Content="Benchmark" Margin="5" Width="75" Click="BenchmarkButtonClick"
+                Visibility="{Binding BenchmarkButtonVisibility}"/>
+            <Button
+                Content="⏸" Margin="5" Width="30" Click="PauseButtonClick"
+                Visibility="{Binding PauseButtonVisibility}"/>
+            <Button
+                Content="▶️" Margin="5" Width="30" Click="ResumeButtonClick"
+                Visibility="{Binding ResumeButtonVisibility}"/>
+            <Button
+                Content="⏹" Margin="5" Width="30" Click="StopButtonClick"
+                Visibility="{Binding StopButtonVisibility}"/>
         </StackPanel>
         <oxy:Plot
             Grid.Row="1"

@@ -11,20 +11,27 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Windows.UI.Notifications;
 
 namespace prime_num_searcher_gui
 {
+    enum Status : uint
+    {
+        None = 0,
+        Benchmarking = 1,
+        Paused = 2,
+        Error = 3
+    }
+    static class StatusExtention
+    {
+        public static bool AnyOf(this Status target, params Status[] list) => list.Contains(target);
+    }
     class BenchmarkResultManager : ValidatableDataBase
     {
-        private void MakeProgressBarFull()
-        {
-            this.ProgressBarValue = this.ProgressBarMax;
-        }
         public void NotifyError(string er)
         {
-            this.IsNoError = false;
-            this.MakeProgressBarFull();
+            this.BenchmarkStatus = Status.Error;
             Debug.WriteLine(er);
             var xml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
             var texts = xml.GetElementsByTagName("text");
@@ -32,20 +39,16 @@ namespace prime_num_searcher_gui
             texts[1].AppendChild(xml.CreateTextNode(er));
             windowsNotifier.Show(new ToastNotification(xml));
         }
-        public void ClearError()
-        {
-            this.isNoError = true;
-        }
         public void BeforeStartBenchmark()
         {
-            this.ClearError();
             this.IsNotBenchmarking = false;
+            this.BenchmarkStatus = Status.Benchmarking;
             this.ProgressBarValue = 0;
         }
         public void AfterFinishBenchmark()
         {
             this.IsNotBenchmarking = true;
-            this.MakeProgressBarFull();
+            this.BenchmarkStatus = Status.None;
         }
 
         #region win10notify
@@ -80,25 +83,29 @@ namespace prime_num_searcher_gui
             }
         }
         public UInt64 ProgressBarMax { get => this.reserchMaxNum_ / this.interval_ + 1; }
-        private UInt64 progressBarValue_ = 1;
+        private UInt64 progressBarValue_ = 0;
         public UInt64 ProgressBarValue {
             get => this.progressBarValue_;
             set { this.SetProperty(ref this.progressBarValue_, value); }
         }
-        private bool isNoError = true;
-        public bool IsNoError
+        private Status benchmarkStatus = Status.None;
+        public Status BenchmarkStatus
         {
-            get => this.isNoError;
+            get => this.benchmarkStatus;
             set
             {
-                this.SetProperty(ref this.isNoError, value);
+                Debug.Assert(Enum.GetNames(typeof(Status)).Length == progressBarColors.Length);
+                this.benchmarkStatus = value;
                 this.OnPropertyChanged("ProgressbarColor");
+                this.NotifyButtonVisibilityChanged();
+                //make progressbar value full
+                if(value.AnyOf(Status.None, Status.Error)) this.ProgressBarValue = this.ProgressBarMax;
             }
         }
-        private static readonly string[] progressBarColors = { "Red", "SkyBlue" };
+        private static readonly string[] progressBarColors = { "SkyBlue", "SkyBlue", "Yellow", "Red" };
         public string ProgressbarColor
         {
-            get => progressBarColors[this.isNoError ? 1 : 0];
+            get => progressBarColors[(uint)benchmarkStatus];
         }
         private bool isNotBenchmarking = true;
         public bool IsNotBenchmarking
@@ -106,6 +113,31 @@ namespace prime_num_searcher_gui
             get => this.isNotBenchmarking;
             set { this.SetProperty(ref this.isNotBenchmarking, value); }
         }
+        #region ButtonVisibility
+        public Visibility BenchmarkButtonVisibility
+        {
+            get => (this.benchmarkStatus.AnyOf(Status.None, Status.Error)) ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public Visibility PauseButtonVisibility
+        {
+            get => (this.benchmarkStatus.AnyOf(Status.Benchmarking)) ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public Visibility ResumeButtonVisibility
+        {
+            get => (this.benchmarkStatus.AnyOf(Status.Paused)) ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public Visibility StopButtonVisibility
+        {
+            get => (this.benchmarkStatus.AnyOf(Status.Benchmarking, Status.Paused)) ? Visibility.Visible : Visibility.Collapsed;
+        }
+        private void NotifyButtonVisibilityChanged()
+        {
+            this.OnPropertyChanged("BenchmarkButtonVisibility");
+            this.OnPropertyChanged("PauseButtonVisibility");
+            this.OnPropertyChanged("ResumeButtonVisibility");
+            this.OnPropertyChanged("StopButtonVisibility");
+        }
+        #endregion
         #endregion
     }
 }
