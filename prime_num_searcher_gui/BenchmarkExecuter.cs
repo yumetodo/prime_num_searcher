@@ -84,7 +84,8 @@ namespace prime_num_searcher_gui
             if(IsExecutable) return CreateResultDictionary();
             this.IsPaused = true;
             await notifyResume.WaitAsync().ConfigureAwait(false);
-            return this.tmpResult;
+            //to activate PropatyChanged event
+            return this.tmpResult.ToList().ToDictionary(x => x.Key, x => x.Value.ToArray().ToList());
         }
         public void NotifyResume()
         {
