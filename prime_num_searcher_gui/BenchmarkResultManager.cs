@@ -89,7 +89,7 @@ namespace prime_num_searcher_gui
                 this.aeroProgress.SetProgressValue(this.progressBarValue_, ProgressBarMax);
             }
         }
-        public UInt64 ProgressBarMax { get => this.reserchMaxNum_ / this.interval_ - 1; }
+        public UInt64 ProgressBarMax { get => this.reserchMaxNum_ / this.interval_ + 1; }
         private UInt64 progressBarValue_ = 0;
         public UInt64 ProgressBarValue {
             get => this.progressBarValue_;
