@@ -22,16 +22,17 @@ namespace prime_num_searcher_gui
     /// </summary>
     public partial class MainWindow : Window
     {
-        private BenchmarkResultManager benchmarkResultManager_ = new BenchmarkResultManager();
+        private BenchmarkResultManager benchmarkResultManager_;
         private BenchmarkExecuter benchmarkExecuter_;
         public MainWindow()
         {
-            benchmarkExecuter_ = (Environment.Is64BitOperatingSystem) ? new BenchmarkExecuter("prime_num_searcher_x64.exe") : new BenchmarkExecuter("prime_num_searcher.exe");
+            this.benchmarkExecuter_ = (Environment.Is64BitOperatingSystem) ? new BenchmarkExecuter("prime_num_searcher_x64.exe") : new BenchmarkExecuter("prime_num_searcher.exe");
             InitializeComponent();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.benchmarkResultManager_ = new BenchmarkResultManager();
+            //pass window handle
+            this.benchmarkResultManager_ = new BenchmarkResultManager(new System.Windows.Interop.WindowInteropHelper(this).Handle);
             this.DataContext = this.benchmarkResultManager_;
         }
 
