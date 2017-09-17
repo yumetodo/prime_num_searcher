@@ -32,6 +32,8 @@ namespace prime_num_searcher_gui
         public void NotifyError(string er)
         {
             this.BenchmarkStatus = Status.Error;
+            //make progressbar value full
+            this.ProgressBarValue = this.ProgressBarMax;
             Debug.WriteLine(er);
             var xml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
             var texts = xml.GetElementsByTagName("text");
@@ -46,6 +48,11 @@ namespace prime_num_searcher_gui
         }
         public void AfterFinishBenchmark()
         {
+            if(this.ProgressBarValue != this.ProgressBarMax)
+            {
+                //make progressbar value full
+                this.ReserchMaxNum = (this.ProgressBarValue + 1) * this.interval_;
+            }
             this.BenchmarkStatus = Status.NoProgress;
         }
 
@@ -66,7 +73,7 @@ namespace prime_num_searcher_gui
             set
             {
                 this.SetAndValidatePropaty(ref this.reserchMaxNum_, value);
-                this.OnPropertyChanged("ProgressBarMax");
+                this.OnPropertyChanged("ProgressBarMax", "StatusBarText");
                 this.aeroProgress.SetProgressValue(this.progressBarValue_, ProgressBarMax);
             }
         }
@@ -78,7 +85,7 @@ namespace prime_num_searcher_gui
             set
             {
                 this.SetAndValidatePropaty(ref this.interval_, value);
-                this.OnPropertyChanged("ProgressBarMax");
+                this.OnPropertyChanged("ProgressBarMax", "StatusBarText");
                 this.aeroProgress.SetProgressValue(this.progressBarValue_, ProgressBarMax);
             }
         }
@@ -88,6 +95,7 @@ namespace prime_num_searcher_gui
             get => this.progressBarValue_;
             set {
                 this.SetProperty(ref this.progressBarValue_, value);
+                this.OnPropertyChanged("StatusBarText");
                 this.aeroProgress.SetProgressValue(this.progressBarValue_, ProgressBarMax);
             }
         }
@@ -97,13 +105,21 @@ namespace prime_num_searcher_gui
             get => this.benchmarkStatus_;
             set
             {
-                //make progressbar value full
-                if (this.benchmarkStatus_ != value && value.AnyOf(Status.NoProgress, Status.Error)) this.ProgressBarValue = this.ProgressBarMax;
                 this.benchmarkStatus_ = value;
-                this.OnPropertyChanged("ProgressbarColor");
                 this.aeroProgress.SetProgressState(value);
+                this.OnPropertyChanged("ProgressbarColor", "StatusBarText");
                 this.NotifyButtonVisibilityChanged();
             }
+        }
+        public string StatusBarText
+        {
+            get => (this.benchmarkStatus_ == Status.NoProgress)
+                ? (0 == progressBarValue_)
+                    ? "準備完了"
+                    : string.Format("Benchmark終了 ({0}/{1})", progressBarValue_, ProgressBarMax)
+                : (this.benchmarkStatus_ == Status.Benchmarking) ? string.Format("Benchmark中 ({0}/{1})", progressBarValue_, ProgressBarMax)
+                : (this.benchmarkStatus_ == Status.Paused) ? string.Format("一時停止中 ({0}/{1})", progressBarValue_, ProgressBarMax)
+                : "エラー発生";
         }
         public string ProgressbarColor {
             get => (this.benchmarkStatus_.AnyOf(Status.NoProgress, Status.Benchmarking)) ? "SkyBlue"

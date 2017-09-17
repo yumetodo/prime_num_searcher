@@ -22,6 +22,11 @@ namespace prime_num_searcher_gui
             }
             this.PropertyChanged?.Invoke(this, e);
         }
+        public void OnPropertyChanged(String propertyName, params String[] rest)
+        {
+            OnPropertyChanged(propertyName);
+            foreach(var p in rest) OnPropertyChanged(p);
+        }
         #endregion
 
         #region INotifyDataErrorInfo
