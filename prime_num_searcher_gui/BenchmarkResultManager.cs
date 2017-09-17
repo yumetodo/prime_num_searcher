@@ -1,17 +1,9 @@
-﻿using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Series;
+﻿using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Windows.UI.Notifications;
 
@@ -32,56 +24,10 @@ namespace prime_num_searcher_gui
     }
     class BenchmarkResultManager : ValidatableDataBase
     {
-        [ComImport()]
-        [Guid("ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf")]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        private interface ITaskbarList3
-        {
-            // ITaskbarList
-            [PreserveSig]
-            void HrInit();
-            [PreserveSig]
-            void AddTab(IntPtr hwnd);
-            [PreserveSig]
-            void DeleteTab(IntPtr hwnd);
-            [PreserveSig]
-            void ActivateTab(IntPtr hwnd);
-            [PreserveSig]
-            void SetActiveAlt(IntPtr hwnd);
-
-            // ITaskbarList2
-            [PreserveSig]
-            void MarkFullscreenWindow(IntPtr hwnd, [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
-
-            // ITaskbarList3
-            [PreserveSig]
-            void SetProgressValue(IntPtr hwnd, UInt64 ullCompleted, UInt64 ullTotal);
-            [PreserveSig]
-            void SetProgressState(IntPtr hwnd, Status state);
-        }
-
-        [ComImport()]
-        [Guid("56fdf344-fd6d-11d0-958a-006097c9a090")]
-        [ClassInterface(ClassInterfaceType.None)]
-        private class TaskbarInstance
-        {
-        }
-        private static ITaskbarList3 taskbarInstance = (ITaskbarList3)new TaskbarInstance();
-        private static bool taskbarSupported = Environment.OSVersion.Version >= new Version(6, 1);
-        private IntPtr handle_;
-
+        AeroProgress aeroProgress;
         public BenchmarkResultManager(IntPtr handle)
         {
-            this.handle_ = handle;
-        }
-        private void SetProgressState(Status taskbarState)
-        {
-            if (taskbarSupported) taskbarInstance.SetProgressState(this.handle_, taskbarState);
-        }
-
-        private void SetProgressValue(UInt64 progressValue, UInt64 progressMax)
-        {
-            if (taskbarSupported) taskbarInstance.SetProgressValue(this.handle_, progressValue, progressMax);
+            this.aeroProgress = new AeroProgress(handle);
         }
         public void NotifyError(string er)
         {
@@ -121,7 +67,7 @@ namespace prime_num_searcher_gui
             {
                 this.SetAndValidatePropaty(ref this.reserchMaxNum_, value);
                 this.OnPropertyChanged("ProgressBarMax");
-                this.SetProgressValue(this.progressBarValue_, ProgressBarMax);
+                this.aeroProgress.SetProgressValue(this.progressBarValue_, ProgressBarMax);
             }
         }
         private UInt64 interval_ = 1;
@@ -133,7 +79,7 @@ namespace prime_num_searcher_gui
             {
                 this.SetAndValidatePropaty(ref this.interval_, value);
                 this.OnPropertyChanged("ProgressBarMax");
-                this.SetProgressValue(this.progressBarValue_, ProgressBarMax);
+                this.aeroProgress.SetProgressValue(this.progressBarValue_, ProgressBarMax);
             }
         }
         public UInt64 ProgressBarMax { get => this.reserchMaxNum_ / this.interval_ + 1; }
@@ -142,7 +88,7 @@ namespace prime_num_searcher_gui
             get => this.progressBarValue_;
             set {
                 this.SetProperty(ref this.progressBarValue_, value);
-                this.SetProgressValue(this.progressBarValue_, ProgressBarMax);
+                this.aeroProgress.SetProgressValue(this.progressBarValue_, ProgressBarMax);
             }
         }
         private Status benchmarkStatus_ = Status.NoProgress;
@@ -154,8 +100,8 @@ namespace prime_num_searcher_gui
                 //make progressbar value full
                 if (this.benchmarkStatus_ != value && value.AnyOf(Status.NoProgress, Status.Error)) this.ProgressBarValue = this.ProgressBarMax;
                 this.benchmarkStatus_ = value;
-                this.SetProgressState(value);
                 this.OnPropertyChanged("ProgressbarColor");
+                this.aeroProgress.SetProgressState(value);
                 this.NotifyButtonVisibilityChanged();
             }
         }
