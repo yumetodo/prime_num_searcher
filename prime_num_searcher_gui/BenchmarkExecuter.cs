@@ -38,6 +38,7 @@ namespace prime_num_searcher_gui
         {
             if (!IsExecutable) return CreateResultDictionary();
             this.notifyStop = false;
+            //clear previous result to activate PropatyChanged event
             this.tmpResult = CreateResultDictionary();
             IsExecutable = false;
             try

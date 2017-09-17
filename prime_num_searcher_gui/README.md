@@ -6,6 +6,8 @@
 - [C# 5.0 / WPFでRSSフィードを取得し、表示するプログラムです。（For Qiita : [C# / WPF] 最新のC# 6.0でMVVMパターンを実装する）](https://gist.github.com/Nia-TN1012/a9762b547fcf644691fd)
 - [データバインディング（WPF） - クラスライブラリ | ++C++; // 未確認飛行 C](http://ufcpp.net/study/dotnet/wpf_binding.html)
 - [WPF で DataContext を 設定 する 方法 - galife](https://garafu.blogspot.jp/2014/09/wpf-datacontext.html)
+- [C# - OxyPlotでdatabindingしているがOnPropatyChangedを一度しか受け付けない(92829)｜teratail](https://teratail.com/questions/92829?modal=q-comp)
+- [おいがみさんのツイート: "@yumetodo Execute と Pause が同じ参照を返してるから更新が行われない。 INotifyCollectionChanged に対応したものを使うか新しくオブジェクトを作り直す必要がある、けど OxyPlot が WPF のルールに則ってるかは知らない。"](https://twitter.com/oigami013/status/909333687665229824)
 
 ### Validiation
 - [第4回　検証属性の自作とクラス・レベルのモデル検証（1/3） - ＠IT](http://www.atmarkit.co.jp/fdotnet/aspnetmvc3/aspnetmvc3_05/aspnetmvc3_05_01.html)
@@ -39,12 +41,14 @@
 - [OSやプロセスが64bitかどうかを調べるには？［4以降、C#、VB］ - ＠IT](http://www.atmarkit.co.jp/fdotnet/dotnettips/1045is64bitos/is64bitos.html)
 - [Finally文が実行されないケースはあるか？: .NET Tips: C#, VB.NET](https://dobon.net/vb/dotnet/beginner/tryfinally.html)
 - [マルチスレッドで高速なC#を書くためのロック戦略 - Qiita](http://qiita.com/tadokoro/items/28b3623a5ec58517d431)
+- [enumの項目数を取得する - Qiita](http://qiita.com/kazuhirox/items/12319707ba2eb650e9e8)
 
 ### LINQ
 - [【LINQの前に】ラムダ式？デリゲート？Func<T, TResult>？な人へのまとめ【知ってほしい】 - Qiita](http://qiita.com/RyotaMurohoshi/items/740151bd772889cf07de)
 - [Linq入門記-34 (LINQ To Object, Except) - いろいろ備忘録日記](http://devlights.hatenablog.com/entry/20100908/p3)
 - [配列やコレクションのフィルタ処理を行う（条件に合う要素を抜き出す）: .NET Tips: C#, VB.NET](https://dobon.net/vb/dotnet/programing/arrayfilter.html)
 - [debugging - How to debug a LINQ Statement - Stack Overflow](https://stackoverflow.com/questions/118341/how-to-debug-a-linq-statement)
+- [C#でKeyValuePairをDictionaryに変換する | Remember The Time](http://www.remember-the-time.xyz/2016/03/c-sharp-convert-keyvaluepair-to.html)
 
 ### async/await
 

@@ -23,7 +23,7 @@ namespace prime_num_searcher_gui
         Paused = 2,
         Error = 3
     }
-    static class StatusExtention
+    static class StatusEx
     {
         public static bool AnyOf(this Status target, params Status[] list) => list.Contains(target);
     }
@@ -41,13 +41,11 @@ namespace prime_num_searcher_gui
         }
         public void BeforeStartBenchmark()
         {
-            this.IsNotBenchmarking = false;
             this.BenchmarkStatus = Status.Benchmarking;
             this.ProgressBarValue = 0;
         }
         public void AfterFinishBenchmark()
         {
-            this.IsNotBenchmarking = true;
             this.BenchmarkStatus = Status.None;
         }
 
@@ -95,41 +93,22 @@ namespace prime_num_searcher_gui
             set
             {
                 Debug.Assert(Enum.GetNames(typeof(Status)).Length == progressBarColors.Length);
+                //make progressbar value full
+                if (this.benchmarkStatus != value && value.AnyOf(Status.None, Status.Error)) this.ProgressBarValue = this.ProgressBarMax;
                 this.benchmarkStatus = value;
                 this.OnPropertyChanged("ProgressbarColor");
                 this.NotifyButtonVisibilityChanged();
-                //make progressbar value full
-                if(value.AnyOf(Status.None, Status.Error)) this.ProgressBarValue = this.ProgressBarMax;
             }
         }
-        private static readonly string[] progressBarColors = { "SkyBlue", "SkyBlue", "Yellow", "Red" };
-        public string ProgressbarColor
-        {
-            get => progressBarColors[(uint)benchmarkStatus];
-        }
-        private bool isNotBenchmarking = true;
-        public bool IsNotBenchmarking
-        {
-            get => this.isNotBenchmarking;
-            set { this.SetProperty(ref this.isNotBenchmarking, value); }
-        }
+        private static readonly string skyBlue = "SkyBlue";
+        private static readonly string[] progressBarColors = { skyBlue, skyBlue, "Yellow", "Red" };
+        public string ProgressbarColor { get => progressBarColors[(uint)benchmarkStatus]; }
         #region ButtonVisibility
-        public Visibility BenchmarkButtonVisibility
-        {
-            get => (this.benchmarkStatus.AnyOf(Status.None, Status.Error)) ? Visibility.Visible : Visibility.Collapsed;
-        }
-        public Visibility PauseButtonVisibility
-        {
-            get => (this.benchmarkStatus.AnyOf(Status.Benchmarking)) ? Visibility.Visible : Visibility.Collapsed;
-        }
-        public Visibility ResumeButtonVisibility
-        {
-            get => (this.benchmarkStatus.AnyOf(Status.Paused)) ? Visibility.Visible : Visibility.Collapsed;
-        }
-        public Visibility StopButtonVisibility
-        {
-            get => (this.benchmarkStatus.AnyOf(Status.Benchmarking, Status.Paused)) ? Visibility.Visible : Visibility.Collapsed;
-        }
+        private Visibility ButtonVisibleWhen(params Status[] status) => (this.benchmarkStatus.AnyOf(status)) ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility BenchmarkButtonVisibility { get => this.ButtonVisibleWhen(Status.None, Status.Error); }
+        public Visibility PauseButtonVisibility { get => this.ButtonVisibleWhen(Status.Benchmarking); }
+        public Visibility ResumeButtonVisibility { get => this.ButtonVisibleWhen(Status.Paused); }
+        public Visibility StopButtonVisibility { get => this.ButtonVisibleWhen(Status.Benchmarking, Status.Paused); }
         private void NotifyButtonVisibilityChanged()
         {
             this.OnPropertyChanged("BenchmarkButtonVisibility");
