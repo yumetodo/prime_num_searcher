@@ -75,7 +75,7 @@
             LegendFontSize="10"
             DefaultFont="Yu Gothic Medium">
             <oxy:Plot.Axes>
-                <oxy:LinearAxis Position="Left" Title="時間 [nano sec.]" Minimum="0"/>
+                <oxy:LinearAxis Position="Left" Title="{Binding YAxisLabelText}" Minimum="0"/>
                 <oxy:LinearAxis Position="Bottom" Title="探索上限数N" Minimum="0"/>
             </oxy:Plot.Axes>
             <oxy:Plot.Series>

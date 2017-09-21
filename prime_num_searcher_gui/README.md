@@ -33,6 +33,7 @@
 - [wpf - How to get StackPanel's children to fill maximum space downward? - Stack Overflow](https://stackoverflow.com/questions/569095/how-to-get-stackpanels-children-to-fill-maximum-space-downward)
 - [WPF4.5入門 その39 「情報を表示するコントロール」 - かずきのBlog@hatena](http://blog.okazuki.jp/entry/2014/08/16/150009)
 - [Hiding a button in WPF - Stack Overflow](https://stackoverflow.com/questions/3052593/hiding-a-button-in-wpf)
+- [WPFからウィンドウハンドルを取得する方法あれこれ - 亀岡的プログラマ日記](http://posaune.hatenablog.com/entry/20091228/1261981901)
 
 ## C# Core
 - [インデクサー - C# によるプログラミング入門 | ++C++; // 未確認飛行 C](http://ufcpp.net/study/csharp/oo_indexer.html)
@@ -42,6 +43,8 @@
 - [Finally文が実行されないケースはあるか？: .NET Tips: C#, VB.NET](https://dobon.net/vb/dotnet/beginner/tryfinally.html)
 - [マルチスレッドで高速なC#を書くためのロック戦略 - Qiita](http://qiita.com/tadokoro/items/28b3623a5ec58517d431)
 - [enumの項目数を取得する - Qiita](http://qiita.com/kazuhirox/items/12319707ba2eb650e9e8)
+- [【C#の定数】const と readonly、static readonly の使い分け - Qiita](http://qiita.com/tanakaworld/items/eda69da263e24adfa07d)
+- [Dictionaryの値をforeachで変更する【C#】 - (:3[kanのメモ帳]](http://kan-kikuchi.hatenablog.com/entry/Dictionary_foreach)
 
 ### LINQ
 - [【LINQの前に】ラムダ式？デリゲート？Func<T, TResult>？な人へのまとめ【知ってほしい】 - Qiita](http://qiita.com/RyotaMurohoshi/items/740151bd772889cf07de)
@@ -66,3 +69,6 @@
 - [WPF — OxyPlot 2015.1 documentation](http://docs.oxyplot.org/en/latest/getting-started/hello-wpf.html)
 - [ruhiel/OxyPlotSample](https://github.com/ruhiel/OxyPlotSample)
 - [Export to SVG — OxyPlot 2015.1 documentation](http://docs.oxyplot.org/en/latest/export/export-svg.html)
+
+# Windows
+- [Windows 7 progress bar in taskbar in C#? - Stack Overflow](https://stackoverflow.com/questions/1295890/windows-7-progress-bar-in-taskbar-in-c)

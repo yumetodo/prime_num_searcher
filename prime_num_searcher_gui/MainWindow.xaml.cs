@@ -33,6 +33,7 @@ namespace prime_num_searcher_gui
                     this.benchmarkResultManager_.Interval,
                     onProgressChange: p => { this.benchmarkResultManager_.ProgressBarValue = p; }
                 );
+                this.benchmarkResultManager_.YAxisLabelText = string.Format("時間 [{0}]", benchmarkExecuter_.ResultTimeUnit.ToUnitString());
             }
             catch(Exception ex)
             {
@@ -49,6 +50,7 @@ namespace prime_num_searcher_gui
             try
             {
                 this.benchmarkResultManager_.PlotSources = await this.benchmarkExecuter_.Pasue();
+                this.benchmarkResultManager_.YAxisLabelText = string.Format("時間 [{0}]", benchmarkExecuter_.ResultTimeUnit.ToUnitString());
                 this.benchmarkResultManager_.BenchmarkStatus = Status.Paused;
             }
             catch(Exception ex)

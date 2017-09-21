@@ -34,6 +34,9 @@ namespace prime_num_searcher_gui
         private Dictionary<string, List<ScatterPoint>> tmpResult;
         private SemaphoreSlim notifyResume = new SemaphoreSlim(1,1);
         private bool notifyStop = false;
+        private UInt64 currentMaxPointY = 0;
+        private TimeUnitManager timeUnitManager = new TimeUnitManager { };
+        public TimeUnit ResultTimeUnit { get => this.timeUnitManager.unit; }
         public async Task<Dictionary<string, List<ScatterPoint>>> Execute(UInt64 maxNum, UInt64 interval, Action<UInt64> onProgressChange)
         {
             if (!IsExecutable) return CreateResultDictionary();
@@ -41,17 +44,39 @@ namespace prime_num_searcher_gui
             //clear previous result to activate PropatyChanged event
             this.tmpResult = CreateResultDictionary();
             IsExecutable = false;
+            currentMaxPointY = 0;
+            this.timeUnitManager.unit = TimeUnit.nanoseconds;
             try
             {
                 UInt64 count = 1;
+                Action<List<KeyValuePair<string, UInt64>>> timeUnitConvertWhenRequired = (List<KeyValuePair<string, UInt64>> runResults) =>
+                {
+                    this.currentMaxPointY = Math.Max(runResults.Max(p => p.Value), this.currentMaxPointY);
+                    if (this.timeUnitManager.HasBiggerUnit && this.timeUnitManager.ShouldAdoptBiggerUnit(this.currentMaxPointY))
+                    {
+                        //convert required
+                        var previousUnit = this.timeUnitManager.unit;
+                        timeUnitManager.MakeUnitBigger();
+                        var tmp = this.tmpResult
+                            .Select(pair => new KeyValuePair<string, List<ScatterPoint>>(
+                                pair.Key,
+                                pair.Value
+                                    .Select(p => new ScatterPoint(p.X, this.timeUnitManager.Convert(p.Y, previousUnit), value: p.Value))
+                                    .ToList()
+                            ))
+                            .ToDictionary(x => x.Key, x => x.Value);
+                        this.tmpResult = tmp;
+                    }
+                };
                 Action<UInt64, List<KeyValuePair<string, UInt64>>> convert = (UInt64 i, List<KeyValuePair<string, UInt64>> runResults) =>
                 {
                     try
                     {
                         foreach (var p in runResults)
                         {
-                            this.tmpResult[p.Key].Add(new ScatterPoint(i, p.Value) { Value = 0 });
+                            this.tmpResult[p.Key].Add(new ScatterPoint(i, this.timeUnitManager.Convert(p.Value), value: 0));
                         }
+                        timeUnitConvertWhenRequired(runResults);
                         onProgressChange(count);
                     }
                     finally

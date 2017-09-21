@@ -53,7 +53,7 @@ namespace prime_num_searcher_gui
                 //make progressbar value full
                 this.ReserchMaxNum = (this.ProgressBarValue + 1) * this.interval_;
             }
-            this.BenchmarkStatus = Status.NoProgress;
+            if(this.BenchmarkStatus != Status.Error) this.BenchmarkStatus = Status.NoProgress;
         }
 
         #region win10notify
@@ -64,6 +64,11 @@ namespace prime_num_searcher_gui
         public Dictionary<string, List<ScatterPoint>> PlotSources {
             get => this.plotSources_;
             set { this.SetProperty(ref this.plotSources_, value); }
+        }
+        private string yAxisLabelText = "時間 [nano sec.]";
+        public string YAxisLabelText {
+            get => this.yAxisLabelText;
+            set { this.SetProperty(ref this.yAxisLabelText, value); }
         }
         private UInt64 reserchMaxNum_ = 2;
         [Required]
