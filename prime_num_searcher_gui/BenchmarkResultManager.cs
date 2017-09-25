@@ -24,10 +24,10 @@ namespace prime_num_searcher_gui
     }
     class BenchmarkResultManager : ValidatableDataBase
     {
-        AeroProgress aeroProgress;
+        private AeroProgress aeroProgress_;
         public BenchmarkResultManager(IntPtr handle)
         {
-            this.aeroProgress = new AeroProgress(handle);
+            this.aeroProgress_ = new AeroProgress(handle);
         }
         public void NotifyError(string er)
         {
@@ -65,10 +65,10 @@ namespace prime_num_searcher_gui
             get => this.plotSources_;
             set { this.SetProperty(ref this.plotSources_, value); }
         }
-        private string yAxisLabelText = "時間 [nano sec.]";
+        private string yAxisLabelText_ = "時間 [nano sec.]";
         public string YAxisLabelText {
-            get => this.yAxisLabelText;
-            set { this.SetProperty(ref this.yAxisLabelText, value); }
+            get => this.yAxisLabelText_;
+            set { this.SetProperty(ref this.yAxisLabelText_, value); }
         }
         private UInt64 reserchMaxNum_ = 2;
         [Required]
@@ -79,7 +79,7 @@ namespace prime_num_searcher_gui
             {
                 this.SetAndValidatePropaty(ref this.reserchMaxNum_, value);
                 this.OnPropertyChanged("ProgressBarMax", "StatusBarText");
-                this.aeroProgress.SetProgressValue(this.progressBarValue_, ProgressBarMax);
+                this.aeroProgress_.SetProgressValue(this.progressBarValue_, ProgressBarMax);
             }
         }
         private UInt64 interval_ = 1;
@@ -91,7 +91,7 @@ namespace prime_num_searcher_gui
             {
                 this.SetAndValidatePropaty(ref this.interval_, value);
                 this.OnPropertyChanged("ProgressBarMax", "StatusBarText");
-                this.aeroProgress.SetProgressValue(this.progressBarValue_, ProgressBarMax);
+                this.aeroProgress_.SetProgressValue(this.progressBarValue_, ProgressBarMax);
             }
         }
         public UInt64 ProgressBarMax { get => this.reserchMaxNum_ / this.interval_ + 1; }
@@ -101,7 +101,7 @@ namespace prime_num_searcher_gui
             set {
                 this.SetProperty(ref this.progressBarValue_, value);
                 this.OnPropertyChanged("StatusBarText");
-                this.aeroProgress.SetProgressValue(this.progressBarValue_, ProgressBarMax);
+                this.aeroProgress_.SetProgressValue(this.progressBarValue_, ProgressBarMax);
             }
         }
         private Status benchmarkStatus_ = Status.NoProgress;
@@ -111,7 +111,7 @@ namespace prime_num_searcher_gui
             set
             {
                 this.benchmarkStatus_ = value;
-                this.aeroProgress.SetProgressState(value);
+                this.aeroProgress_.SetProgressState(value);
                 this.OnPropertyChanged("ProgressbarColor", "StatusBarText");
                 this.NotifyButtonVisibilityChanged();
             }
