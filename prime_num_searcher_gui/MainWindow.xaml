@@ -61,8 +61,12 @@
             <Button
                 Content="⏹" Margin="5" Width="30" Click="StopButtonClick"
                 Visibility="{Binding StopButtonVisibility}"/>
+            <Button
+                Content="📷" Margin="5" Width="30" Click="SaveGraphButtonClick"
+                Visibility="{Binding CaptureButtonVisibility}"/>
         </StackPanel>
         <oxy:Plot
+            x:Name="BenchmarkGraph"
             Grid.Row="1"
             Title="Benchmark Results"
             Margin="0" MinHeight="280"

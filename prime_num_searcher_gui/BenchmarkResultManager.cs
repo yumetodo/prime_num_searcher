@@ -25,9 +25,9 @@ namespace prime_num_searcher_gui
     class BenchmarkResultManager : ValidatableDataBase
     {
         private AeroProgress aeroProgress_;
-        public BenchmarkResultManager(IntPtr handle)
+        public BenchmarkResultManager(IntPtr hWnd)
         {
-            this.aeroProgress_ = new AeroProgress(handle);
+            this.aeroProgress_ = new AeroProgress(hWnd);
         }
         public void NotifyError(string er)
         {
@@ -137,6 +137,7 @@ namespace prime_num_searcher_gui
         public Visibility PauseButtonVisibility { get => this.ButtonVisibleWhen(Status.Benchmarking); }
         public Visibility ResumeButtonVisibility { get => this.ButtonVisibleWhen(Status.Paused); }
         public Visibility StopButtonVisibility { get => this.ButtonVisibleWhen(Status.Benchmarking, Status.Paused); }
+        public Visibility CaptureButtonVisibility { get => this.ButtonVisibleWhen(Status.NoProgress, Status.Error, Status.Paused); }
         private void NotifyButtonVisibilityChanged()
         {
             this.OnPropertyChanged("BenchmarkButtonVisibility");

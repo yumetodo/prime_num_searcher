@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
+using System.ComponentModel;
 using System.Windows;
-
+using System.Windows.Interop;
+using Windows.UI.Xaml.Controls;
 
 namespace prime_num_searcher_gui
 {
@@ -15,11 +18,15 @@ namespace prime_num_searcher_gui
         {
             this.benchmarkExecuter_ = (Environment.Is64BitOperatingSystem) ? new BenchmarkExecuter("prime_num_searcher_x64.exe") : new BenchmarkExecuter("prime_num_searcher.exe");
             InitializeComponent();
+            this.SourceInitialized += (object sender, EventArgs e) =>
+            {
+                var hWnd = new WindowInteropHelper(this).Handle;
+                this.benchmarkResultManager_ = new BenchmarkResultManager(hWnd);
+            };
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //pass window handle
-            this.benchmarkResultManager_ = new BenchmarkResultManager(new System.Windows.Interop.WindowInteropHelper(this).Handle);
             this.DataContext = this.benchmarkResultManager_;
         }
 
@@ -78,6 +85,32 @@ namespace prime_num_searcher_gui
             {
                 this.benchmarkExecuter_.NotifyStop();
                 //this.benchmarkResultManager_.BenchmarkStatus = Status.None;
+            }
+            catch (Exception ex)
+            {
+                this.benchmarkResultManager_.NotifyError(ex.ToString());
+            }
+        }
+        private void SaveGraphButtonClick(object clickSender, RoutedEventArgs clickE)
+        {
+            try
+            {
+                var dialog = new SaveFileDialog() {
+                    Title = "ベンチマーク結果グラフ画像を保存",
+                    Filter = "SVG (*.svg)|*.svg|BMP (*.bmp)|*.bmp|PNG (*.png)|*.png|JPEG (*.jpg;*.jpeg;*.jpe;*.jfif)|*.jpg;*.jpeg;*.jpe;*.jfif"
+                };
+                dialog.FileOk += (object sender, CancelEventArgs e) =>
+                {
+                    var d = (SaveFileDialog)sender;
+                    var saveFile = d.OpenFile();
+                    if (1 == d.FilterIndex)
+                    {
+                        var plot = this.FindName("BenchmarkGraph") as OxyPlot.Wpf.Plot;
+                        var svgExporter = new OxyPlot.SvgExporter { Width = plot.ActualWidth, Height = plot.ActualHeight };
+                        svgExporter.Export(plot.ActualModel, saveFile);
+                    }
+                };
+                dialog.ShowDialog();
             }
             catch (Exception ex)
             {

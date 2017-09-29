@@ -29,11 +29,19 @@
 - [WPFでプログレスバーを使ってみる - とある社畜の頭脳整理](http://rinknowledge.rindomain.com/index.php?title=WPF%E3%81%A7%E3%83%97%E3%83%AD%E3%82%B0%E3%83%AC%E3%82%B9%E3%83%90%E3%83%BC%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%BF%E3%82%8B)
 - [c# - WPF change progressbar foreground colour - Stack Overflow](https://stackoverflow.com/questions/21099176/wpf-change-progressbar-foreground-colour)
 
+### File Dialog
+- [c# - SaveFileDialog event FileOk - Stack Overflow](https://stackoverflow.com/questions/19232331/savefiledialog-event-fileok)
+- [[C#]OpenFileDialogのFilterプロパティの書き方: なんとなく・・・](http://earth.air-nifty.com/blog/2012/03/copenfiledialog.html)
+- [WPF4.5入門 その38 「ファイルダイアログ」 - かずきのBlog@hatena](http://blog.okazuki.jp/entry/2014/08/16/112714)
+- [[Tips][SaveFileDialog] [ファイルの種類] ボックスに表示される選択肢を設定する | HIRO's.NET Blog](http://blog.hiros-dot.net/?p=1202)
+
 ### Other
 - [wpf - How to get StackPanel's children to fill maximum space downward? - Stack Overflow](https://stackoverflow.com/questions/569095/how-to-get-stackpanels-children-to-fill-maximum-space-downward)
 - [WPF4.5入門 その39 「情報を表示するコントロール」 - かずきのBlog@hatena](http://blog.okazuki.jp/entry/2014/08/16/150009)
 - [Hiding a button in WPF - Stack Overflow](https://stackoverflow.com/questions/3052593/hiding-a-button-in-wpf)
-- [WPFからウィンドウハンドルを取得する方法あれこれ - 亀岡的プログラマ日記](http://posaune.hatenablog.com/entry/20091228/1261981901)
+- [c# - How to get XAML element by name stored in a string variable? - Stack Overflow](https://stackoverflow.com/questions/22059087/how-to-get-xaml-element-by-name-stored-in-a-string-variable)
+- [OxyPlotでグラフ描画 - SourceChord](http://sourcechord.hatenablog.com/entry/20130429/1367255324)
+- [WPFメモ　ウィンドウ起動～終了時のイベント - Qiita](https://qiita.com/Kosen-amai/items/e13f82ba114e82161b76)
 
 ## C# Core
 - [インデクサー - C# によるプログラミング入門 | ++C++; // 未確認飛行 C](http://ufcpp.net/study/csharp/oo_indexer.html)
@@ -45,6 +53,7 @@
 - [enumの項目数を取得する - Qiita](http://qiita.com/kazuhirox/items/12319707ba2eb650e9e8)
 - [【C#の定数】const と readonly、static readonly の使い分け - Qiita](http://qiita.com/tanakaworld/items/eda69da263e24adfa07d)
 - [Dictionaryの値をforeachで変更する【C#】 - (:3[kanのメモ帳]](http://kan-kikuchi.hatenablog.com/entry/Dictionary_foreach)
+- [[雑記] Dispose にまつわる余談 - C# によるプログラミング入門 | ++C++; // 未確認飛行 C](http://ufcpp.net/study/csharp/rm_disposable.html)
 
 ### LINQ
 - [【LINQの前に】ラムダ式？デリゲート？Func<T, TResult>？な人へのまとめ【知ってほしい】 - Qiita](http://qiita.com/RyotaMurohoshi/items/740151bd772889cf07de)
