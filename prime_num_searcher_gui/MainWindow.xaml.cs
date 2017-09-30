@@ -49,6 +49,20 @@ namespace prime_num_searcher_gui
                 this.hWnd_ = new WindowInteropHelper(this).Handle;
                 this.benchmarkResultManager_ = new BenchmarkResultManager(this.hWnd_);
             };
+            this.DelayedDpiChanged += (object sender, DelayedDpiChangedEventArgs e) =>
+            {
+                
+                try
+                {
+                    var f = e.DpiScaleFactor;
+                    var s = this.windowCapture_.ScreenSize;
+                    this.windowCapture_.ScreenSize = new System.Drawing.Size((int)(s.Width * f), (int)(s.Height * f));
+                }
+                catch (Exception ex)
+                {
+                    this.benchmarkResultManager_?.NotifyError(ex.ToString());
+                }
+            };
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

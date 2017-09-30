@@ -243,7 +243,7 @@ namespace prime_num_searcher_gui.win32
             [DllImport("user32.dll", SetLastError = true)]
             public static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
             [DllImport("user32.dll", SetLastError = true)]
-            public static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
+            public static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
             [DllImport("gdi32.dll", ExactSpelling = true, PreserveSig = true, SetLastError = true)]
             public static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
             /// <summary>
@@ -281,6 +281,8 @@ namespace prime_num_searcher_gui.win32
                 {
                     RECT rect = new RECT();
                     Api.GetWindowRect(this.windowHandle_, ref rect);
+                    WINDOWPLACEMENT wp = new WINDOWPLACEMENT() { length = Marshal.SizeOf<WINDOWPLACEMENT>() };
+                    Api.GetWindowPlacement(this.windowHandle_, ref wp);
                     this.screenSize_ = value;
                     this.ScreenHBitmap_ = HBitmap.CreateDIBSection(IntPtr.Zero, CreateBITMAPINFO(value), DIBColorMode.DIB_RGB_COLORS);
                     //bind
@@ -297,7 +299,7 @@ namespace prime_num_searcher_gui.win32
         }
         public Bitmap Capture()
         {
-            Api.BitBlt(this.screenDC_, 0, 0, ScreenSize.Width, ScreenSize.Height, this.windowDC_, 0, 0, TernaryRasterOperations.SRCCOPY);
+            Api.BitBlt(this.screenDC_, 0, 0, ScreenSize.Width, ScreenSize.Height, this.windowDC_, 7, 0, TernaryRasterOperations.SRCCOPY);
             return Image.FromHbitmap(this.ScreenHBitmap_);
         }
         public void NotifySizeChange()

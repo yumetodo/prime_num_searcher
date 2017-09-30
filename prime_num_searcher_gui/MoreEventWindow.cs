@@ -18,6 +18,7 @@ namespace prime_num_searcher_gui
         public ushort DeviceDpiNew { get; private set; }
         public ushort DeviceDpiOld { get; private set; }
         public Rectangle SuggestedRectangle { get; private set; }
+        public float DpiScaleFactor { get => (float)this.DeviceDpiNew / (float)this.DeviceDpiNew; } 
         public override string ToString() => $"was: {DeviceDpiOld}, now: {DeviceDpiNew}";
         public DelayedDpiChangedEventArgs(ushort old, IntPtr WParam, IntPtr LParam)
         {
@@ -37,8 +38,8 @@ namespace prime_num_searcher_gui
             public const uint MONITOR_DEFAULTTONEAREST = 0x00000002;
             [DllImport("user32.dll")]
             public static extern IntPtr MonitorFromRect([In] ref RECT lprc, uint dwFlags);
-            [DllImport("SHCore.dll")]
-            public static extern IntPtr GetDpiForMonitor(IntPtr hmonitor, MonitorDpiType dpiType, ref uint dpiX, ref uint dpiY);
+            [DllImport("SHCore.dll", SetLastError = true)]
+            public static extern IntPtr GetDpiForMonitor(IntPtr hmonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
         }
         public event EventHandler ResizeBegin;
         protected virtual void OnResizeBegin(EventArgs e) => ResizeBegin?.Invoke(this, e);
@@ -125,9 +126,7 @@ namespace prime_num_searcher_gui
             //Get handle to monitor that has the largest intersection with the rectangle.
             var handleMonitor = W32.MonitorFromRect(ref rect, W32.MONITOR_DEFAULTTONULL);
             if (IntPtr.Zero == handleMonitor) return false;
-            uint dpiX = 0;
-            uint dpiY = 0;
-            var result = W32.GetDpiForMonitor(handleMonitor, MonitorDpiType.Default, ref dpiX, ref dpiY);
+            var result = W32.GetDpiForMonitor(handleMonitor, MonitorDpiType.Default, out uint dpiX, out uint dpiY);
             if (IntPtr.Zero != result) return false;
             return (dpiX == dpiNew);
         }
