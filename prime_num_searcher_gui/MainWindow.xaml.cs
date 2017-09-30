@@ -9,6 +9,28 @@ using System.Windows.Media;
 
 namespace prime_num_searcher_gui
 {
+    public static class VisualEx
+    {
+        /// <summary>
+        /// 現在の <see cref="T:System.Windows.Media.Visual"/> から、DPI 倍率を取得します。
+        /// </summary>
+        /// <returns>
+        /// X 軸 および Y 軸それぞれの DPI 倍率を表す <see cref="T:System.Windows.Point"/>
+        /// 構造体。取得に失敗した場合、(1.0, 1.0) を返します。
+        /// </returns>
+        public static Point GetDpiScaleFactor(this Visual visual)
+        {
+            var source = PresentationSource.FromVisual(visual);
+            if (source != null && source.CompositionTarget != null)
+            {
+                return new Point(
+                    source.CompositionTarget.TransformToDevice.M11,
+                    source.CompositionTarget.TransformToDevice.M22);
+            }
+
+            return new Point(1.0, 1.0);
+        }
+    }
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
@@ -26,14 +48,19 @@ namespace prime_num_searcher_gui
             {
                 this.hWnd_ = new WindowInteropHelper(this).Handle;
                 this.benchmarkResultManager_ = new BenchmarkResultManager(this.hWnd_);
-                this.windowCapture_ = new win32.WindowCapture(this.hWnd_, new System.Drawing.Size((int)this.Width, (int)this.ActualHeight));
             };
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //pass window handle
             this.DataContext = this.benchmarkResultManager_;
-            this.windowCapture_ = new win32.WindowCapture(this.hWnd_, new System.Drawing.Size((int)this.Width, (int)this.ActualHeight));
+            //var s1 = SystemParameters.WorkArea;
+            //var s2 = new System.Drawing.Size((int)this.Width, (int)this.Height);
+            var dpiScaleFactor = this.GetDpiScaleFactor();
+            //var s3 = new System.Drawing.Size((int)(this.Width * dpiScaleFactor.X), (int)(this.Height * dpiScaleFactor.Y));
+            var s4 = new System.Drawing.Size((int)((this.Width - 14) * dpiScaleFactor.X), (int)((this.Height - 7) * dpiScaleFactor.Y));
+            //var s5 = new System.Drawing.Size((int)(this.Width * dpiScaleFactor.X - 14), (int)(this.Height * dpiScaleFactor.Y - 7));
+            this.windowCapture_ = new win32.WindowCapture(this.hWnd_, s4);
             this.SizeChanged += OnSizeChanged;
         }
 
