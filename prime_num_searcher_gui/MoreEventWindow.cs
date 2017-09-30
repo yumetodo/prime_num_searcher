@@ -131,6 +131,13 @@ namespace prime_num_searcher_gui
             if (IntPtr.Zero != result) return false;
             return (dpiX == dpiNew);
         }
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            //promise initializing HWnd occur before another registered SourceInitialized event
+            this.HWnd = new WindowInteropHelper(this).Handle;
+            HwndSource.FromHwnd(this.HWnd).AddHook(new HwndSourceHook(WndProc));
+            base.OnSourceInitialized(e);
+        }
         public MoreEventWindow()
         {
             this.ResizeBegin += (object sender, EventArgs e) => { this.isBeingMoved = true; };
@@ -142,10 +149,6 @@ namespace prime_num_searcher_gui
                     this.willBeAdjusted = false;
                     this.OnDelayedDpiChanged(new DelayedDpiChangedEventArgs(this.dpiOld, this.wParam_, this.lParam_));
                 }
-            };
-            this.SourceInitialized += (object sender, EventArgs e) => {
-                this.HWnd = new WindowInteropHelper(this).Handle;
-                HwndSource.FromHwnd(this.HWnd).AddHook(new HwndSourceHook(WndProc));
             };
         }
     }
