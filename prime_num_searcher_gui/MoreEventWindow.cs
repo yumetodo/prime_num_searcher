@@ -28,7 +28,7 @@ namespace prime_num_searcher_gui
             this.SuggestedRectangle = Rectangle.FromLTRB(suggestedRect.left, suggestedRect.top, suggestedRect.right, suggestedRect.bottom);
         }
     }
-    class MoreEventWindow : Window
+    public class MoreEventWindow : Window
     {
         static class W32
         {

@@ -61,6 +61,7 @@
 - [c# - How to get XAML element by name stored in a string variable? - Stack Overflow](https://stackoverflow.com/questions/22059087/how-to-get-xaml-element-by-name-stored-in-a-string-variable)
 - [OxyPlotでグラフ描画 - SourceChord](http://sourcechord.hatenablog.com/entry/20130429/1367255324)
 - [WPFメモ　ウィンドウ起動～終了時のイベント - Qiita](https://qiita.com/Kosen-amai/items/e13f82ba114e82161b76)
+- [size - How to set WPF window's startup ClientSize? - Stack Overflow](https://stackoverflow.com/questions/1081580/how-to-set-wpf-windows-startup-clientsize)
 
 ## C# Core
 
@@ -76,6 +77,7 @@
 - [[雑記] Dispose にまつわる余談 - C# によるプログラミング入門 | ++C++; // 未確認飛行 C](http://ufcpp.net/study/csharp/rm_disposable.html)
 - [Is there any way of just not bothering with an out parameter in c#? - Stack Overflow](https://stackoverflow.com/questions/462167/is-there-any-way-of-just-not-bothering-with-an-out-parameter-in-c)
 - [C#でpartialを使ってクラスの中身を分割する - かせノート。](http://yutakaseda3216.hatenablog.com/entry/2016/09/12/175533)
+- [C# eventのオーバーライドと基底クラスで発生するイベントの処理 | OPC Diary](https://opcdiary.net/?p=3966)
 
 ### LINQ
 
@@ -123,6 +125,7 @@
 - [GetWindowDC 関数](https://msdn.microsoft.com/ja-jp/library/cc410408.aspx)
 - [GetWindowRect 関数](https://msdn.microsoft.com/ja-jp/library/cc364769.aspx)
 - [c# - Capturing a window with WPF - Stack Overflow](https://stackoverflow.com/questions/1736287/capturing-a-window-with-wpf)
+- [Aero-Snap による Window サイズの変更を検出する - espresso3389の日記](http://espresso3389.hatenablog.com/entry/2015/11/20/025612)
 
 ### WindProc
 
