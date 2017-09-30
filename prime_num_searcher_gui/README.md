@@ -62,6 +62,7 @@
 - [OxyPlotでグラフ描画 - SourceChord](http://sourcechord.hatenablog.com/entry/20130429/1367255324)
 - [WPFメモ　ウィンドウ起動～終了時のイベント - Qiita](https://qiita.com/Kosen-amai/items/e13f82ba114e82161b76)
 - [size - How to set WPF window's startup ClientSize? - Stack Overflow](https://stackoverflow.com/questions/1081580/how-to-set-wpf-windows-startup-clientsize)
+- [WPFでFormの継承(Windowの継承 or 見た目の継承？） - かずきのBlog@hatena](http://blog.okazuki.jp/entry/20091025/1256472760)
 
 ## C# Core
 
