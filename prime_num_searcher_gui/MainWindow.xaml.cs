@@ -9,28 +9,6 @@ using System.Windows.Media;
 
 namespace prime_num_searcher_gui
 {
-    public static class VisualEx
-    {
-        /// <summary>
-        /// 現在の <see cref="T:System.Windows.Media.Visual"/> から、DPI 倍率を取得します。
-        /// </summary>
-        /// <returns>
-        /// X 軸 および Y 軸それぞれの DPI 倍率を表す <see cref="T:System.Windows.Point"/>
-        /// 構造体。取得に失敗した場合、(1.0, 1.0) を返します。
-        /// </returns>
-        public static Point GetDpiScaleFactor(this Visual visual)
-        {
-            var source = PresentationSource.FromVisual(visual);
-            if (source != null && source.CompositionTarget != null)
-            {
-                return new Point(
-                    source.CompositionTarget.TransformToDevice.M11,
-                    source.CompositionTarget.TransformToDevice.M22);
-            }
-
-            return new Point(1.0, 1.0);
-        }
-    }
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
@@ -44,6 +22,7 @@ namespace prime_num_searcher_gui
         {
             this.benchmarkExecuter_ = (Environment.Is64BitOperatingSystem) ? new BenchmarkExecuter("prime_num_searcher_x64.exe") : new BenchmarkExecuter("prime_num_searcher.exe");
             InitializeComponent();
+            SetProcessDpiAwareness(ProcessDPIAwareness.ProcessPerMonitorDPIAware);
             this.SourceInitialized += (object sender, EventArgs e) =>
             {
                 this.hWnd_ = new WindowInteropHelper(this).Handle;

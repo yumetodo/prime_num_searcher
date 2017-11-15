@@ -52,6 +52,7 @@
 - [High DPI support in Windows Forms | Microsoft Docs](https://docs.microsoft.com/en-us/dotnet/framework/winforms/high-dpi-support-in-windows-forms)
 - [WPFアプリを高DPI対応にしよう！ - Qiita](https://qiita.com/YSRKEN/items/b8072f4816a88924605d)
 - [WindowsフォームとPer-Monitor DPI（続）](http://8thway.blogspot.jp/2013/10/winforms-per-monitor-dpi-aggendum.html)
+- [Visual Studio | WPF > Window Message > WM_DPICHANGED を受信する - Qiita](https://qiita.com/7of9/items/4bd1bf3ccbd0cafe518a)
 
 ### Other
 

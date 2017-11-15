@@ -41,6 +41,16 @@ namespace prime_num_searcher_gui
             [DllImport("SHCore.dll", SetLastError = true)]
             public static extern IntPtr GetDpiForMonitor(IntPtr hmonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
         }
+        public enum ProcessDPIAwareness
+        {
+            ProcessDPIUnaware = 0,
+            ProcessSystemDPIAware = 1,
+            ProcessPerMonitorDPIAware = 2
+        }
+
+        [DllImport("shcore.dll")]
+        public static extern int SetProcessDpiAwareness(ProcessDPIAwareness value);
+
         public event EventHandler ResizeBegin;
         protected virtual void OnResizeBegin(EventArgs e) => ResizeBegin?.Invoke(this, e);
         public event EventHandler ResizeEnd;
@@ -137,6 +147,26 @@ namespace prime_num_searcher_gui
             HwndSource.FromHwnd(this.HWnd).AddHook(new HwndSourceHook(WndProc));
             base.OnSourceInitialized(e);
         }
+        /// <summary>
+        /// 現在の <see cref="T:System.Windows.Media.Visual"/> から、DPI 倍率を取得します。
+        /// </summary>
+        /// <returns>
+        /// X 軸 および Y 軸それぞれの DPI 倍率を表す <see cref="T:System.Windows.Point"/>
+        /// 構造体。取得に失敗した場合、(1.0, 1.0) を返します。
+        /// </returns>
+        public System.Windows.Point GetDpiScaleFactor()
+        {
+            var source = PresentationSource.FromVisual(this);
+            if (source != null && source.CompositionTarget != null)
+            {
+                return new System.Windows.Point(
+                    source.CompositionTarget.TransformToDevice.M11,
+                    source.CompositionTarget.TransformToDevice.M22);
+            }
+
+            return new System.Windows.Point(1.0, 1.0);
+        }
+
         public MoreEventWindow()
         {
             this.ResizeBegin += (object sender, EventArgs e) => { this.isBeingMoved = true; };
@@ -148,6 +178,11 @@ namespace prime_num_searcher_gui
                     this.willBeAdjusted = false;
                     this.OnDelayedDpiChanged(new DelayedDpiChangedEventArgs(this.dpiOld, this.wParam_, this.lParam_));
                 }
+            };
+            this.Loaded += (object sender, RoutedEventArgs e) =>
+            {
+                var dpiScale = this.GetDpiScaleFactor();
+                this.dpiOld = (ushort)(dpiScale.X * 100);
             };
         }
     }
