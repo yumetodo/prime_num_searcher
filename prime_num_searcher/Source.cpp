@@ -11,6 +11,7 @@
 #include <memory>
 #include <cstdint>
 #include <cmath>
+#include "version.h"
 using prime_store_t = std::size_t;
 using prime_vector = std::vector<prime_store_t>;
 class prime_num_searcher
@@ -139,6 +140,10 @@ int main(int argc, char* argv[]) {
 			return (tmp > 2) ? tmp : 3;
 		};
 		if (2 == argc) {
+			using namespace std::string_literals;
+			if ("-v"s == argv[1] || "--version"s == argv[1]) {
+				std::cout << "prime num searcher version " PRIME_NUM_VERSION_STR << std::endl;
+			}
 			try {
 				const auto t = std::stoull(argv[1]);
 				tmp = (std::numeric_limits<prime_store_t>::max() < t) ? read_from_stdin() : prime_store_t(t);

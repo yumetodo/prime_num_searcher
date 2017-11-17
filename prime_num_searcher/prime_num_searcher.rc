@@ -1,0 +1,44 @@
+#include <winver.h>
+#include "version.h"
+
+#define PRIME_NUM_EXE_NAME            "PRIME_NUM_CUI.exe"
+#define PRIME_NUM_EXE_INFO            "PRIME_NUM_CUI"
+
+#ifdef DEBUG
+#define VER_DEBUG   VS_FF_DEBUG
+#define VER_PRIVATE VS_FF_PRIVATEBUILD
+#else
+#define VER_DEBUG   0
+#define VER_PRIVATE 0
+#endif
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    PRIME_NUM_VERSION
+PRODUCTVERSION  PRIME_NUM_VERSION
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+FILEFLAGS       ( VER_DEBUG | VER_PRIVATE )
+FILEOS          VOS_NT_WINDOWS32
+FILETYPE        VFT_DLL
+FILESUBTYPE     VFT_APP
+BEGIN
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x411, 1200
+    END
+
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041104b0"
+        BEGIN
+            VALUE "Comments",         PRIME_NUM_EXE_INFO
+            VALUE "CompanyName",      ""
+            VALUE "FileDescription",  PRIME_NUM_FILE_DESCRIPTION
+            VALUE "FileVersion",      PRIME_NUM_VERSION_STR
+            VALUE "InternalName",     PRIME_NUM_EXE_NAME
+            VALUE "OriginalFileName", PRIME_NUM_EXE_NAME
+            VALUE "LegalCopyright",   PRIME_NUM_COPYRIGHT_STR
+            VALUE "ProductName",      PRIME_NUM_EXE_INFO
+            VALUE "ProductVersion",   PRIME_NUM_VERSION_STR
+        END
+    END
+END
