@@ -6,18 +6,29 @@ using System.Windows.Interop;
 using System.Drawing.Imaging;
 using Windows.UI.Xaml.Controls;
 using System.Windows.Media;
+using System.Runtime.InteropServices;
 
 namespace prime_num_searcher_gui
 {
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class MainWindow : MoreEventWindow
+    public partial class MainWindow : Window
     {
         private BenchmarkResultManager benchmarkResultManager_;
         private BenchmarkExecuter benchmarkExecuter_;
         private win32.WindowCapture windowCapture_;
         private IntPtr hWnd_;
+        public enum ProcessDPIAwareness
+        {
+            ProcessDPIUnaware = 0,
+            ProcessSystemDPIAware = 1,
+            ProcessPerMonitorDPIAware = 2
+        }
+
+        [DllImport("shcore.dll")]
+        public static extern int SetProcessDpiAwareness(ProcessDPIAwareness value);
+
         public MainWindow()
         {
             this.benchmarkExecuter_ = (Environment.Is64BitOperatingSystem) ? new BenchmarkExecuter("prime_num_searcher_x64.exe") : new BenchmarkExecuter("prime_num_searcher.exe");
@@ -28,35 +39,27 @@ namespace prime_num_searcher_gui
                 this.hWnd_ = new WindowInteropHelper(this).Handle;
                 this.benchmarkResultManager_ = new BenchmarkResultManager(this.hWnd_);
             };
-            this.DelayedDpiChanged += (object sender, DelayedDpiChangedEventArgs e) =>
+            this.Loaded += (object sender, RoutedEventArgs e) =>
             {
-                
-                try
-                {
-                    var f = e.DpiScaleFactor;
-                    var s = this.windowCapture_.ScreenSize;
-                    this.windowCapture_.ScreenSize = new System.Drawing.Size((int)(s.Width * f), (int)(s.Height * f));
-                }
-                catch (Exception ex)
-                {
-                    this.benchmarkResultManager_?.NotifyError(ex.ToString());
-                }
+                //pass window handle
+                this.DataContext = this.benchmarkResultManager_;
+                //need to delay register this event because of error handling
+                this.SizeChanged += OnSizeChanged;
+                //new System.Drawing.Size((int)((this.Width - 14) * dpi / 100), (int)((this.Height - 7) * dpi / 100));
+                this.windowCapture_ = new win32.WindowCapture(this.hWnd_, new System.Drawing.Size((int)(this.Width - 14), (int)(this.Height - 7)));
             };
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //pass window handle
-            this.DataContext = this.benchmarkResultManager_;
-            //var s1 = SystemParameters.WorkArea;
-            //var s2 = new System.Drawing.Size((int)this.Width, (int)this.Height);
-            var dpiScaleFactor = this.GetDpiScaleFactor();
-            //var s3 = new System.Drawing.Size((int)(this.Width * dpiScaleFactor.X), (int)(this.Height * dpiScaleFactor.Y));
-            var s4 = new System.Drawing.Size((int)((this.Width - 14) * dpiScaleFactor.X), (int)((this.Height - 7) * dpiScaleFactor.Y));
-            //var s5 = new System.Drawing.Size((int)(this.Width * dpiScaleFactor.X - 14), (int)(this.Height * dpiScaleFactor.Y - 7));
-            this.windowCapture_ = new win32.WindowCapture(this.hWnd_, s4);
-            this.SizeChanged += OnSizeChanged;
+            try
+            {
+                this.windowCapture_.ScreenSize = new System.Drawing.Size((int)(this.Width - 14), (int)(this.Height - 7));
+            }
+            catch (Exception ex)
+            {
+                this.benchmarkResultManager_.NotifyError(ex.ToString());
+            }
         }
-
         private async void BenchmarkButtonClick(object sender, RoutedEventArgs e)
         {
             this.benchmarkResultManager_.BeforeStartBenchmark();
@@ -111,7 +114,6 @@ namespace prime_num_searcher_gui
             try
             {
                 this.benchmarkExecuter_.NotifyStop();
-                //this.benchmarkResultManager_.BenchmarkStatus = Status.None;
             }
             catch (Exception ex)
             {
@@ -152,17 +154,6 @@ namespace prime_num_searcher_gui
                     }
                 };
                 dialog.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                this.benchmarkResultManager_.NotifyError(ex.ToString());
-            }
-        }
-        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            try
-            {
-                this.windowCapture_.ScreenSize = new System.Drawing.Size((int)e.NewSize.Width, (int)e.NewSize.Height);
             }
             catch (Exception ex)
             {
