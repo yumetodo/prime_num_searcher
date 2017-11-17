@@ -29,6 +29,15 @@ namespace prime_num_searcher_gui
             this.SuggestedRectangle = Rectangle.FromLTRB(suggestedRect.left, suggestedRect.top, suggestedRect.right, suggestedRect.bottom);
         }
     }
+    public sealed class DpiDetectedEventArgs : EventArgs
+    {
+        public ushort DeviceDpi { get; private set; }
+        public override string ToString() => this.DeviceDpi.ToString();
+        public DpiDetectedEventArgs(ushort dpi)
+        {
+            this.DeviceDpi = dpi;
+        }
+    }
     public class MoreEventWindow : Window
     {
         static class W32
@@ -61,6 +70,8 @@ namespace prime_num_searcher_gui
         public event EventHandler Move;
         protected virtual void OnMove(EventArgs e) => Move?.Invoke(this, e);
         public delegate void DelayedDpiChangedEventHandler(object sender, DelayedDpiChangedEventArgs e);
+        public delegate void DpiDetectedEventHandler(object sender, DpiDetectedEventArgs e);
+
         /// <summary>
         /// 遅延されたDPI変更イベントです。
         /// <list type="number">
@@ -79,6 +90,8 @@ namespace prime_num_searcher_gui
         /// </summary>
         public event DelayedDpiChangedEventHandler DelayedDpiChanged;
         protected virtual void OnDelayedDpiChanged(DelayedDpiChangedEventArgs e) => DelayedDpiChanged?.Invoke(this, e);
+        public event DpiDetectedEventHandler DpiDetected;
+        protected virtual void OnDpiDetected(DpiDetectedEventArgs e) => DpiDetected?.Invoke(this, e);
         public IntPtr HWnd { get; private set; } = IntPtr.Zero;
         private ushort dpiOld = 0;
         private ushort dpiNew = 0;
@@ -183,6 +196,7 @@ namespace prime_num_searcher_gui
             {
                 var dpiScale = this.GetDpiScaleFactor();
                 this.dpiOld = (ushort)(dpiScale.X * 100);
+                this.OnDpiDetected(new DpiDetectedEventArgs(this.dpiOld));
             };
         }
     }
