@@ -129,24 +129,26 @@ namespace prime_num_searcher_gui
                 dialog.FileOk += (object sender, CancelEventArgs e) =>
                 {
                     var d = (SaveFileDialog)sender;
-                    var saveFile = d.OpenFile();
-                    if (1 == d.FilterIndex)
+                    using (var saveFile = d.OpenFile())
                     {
-                        var plot = this.FindName("BenchmarkGraph") as OxyPlot.Wpf.Plot;
-                        var svgExporter = new OxyPlot.SvgExporter { Width = plot.ActualWidth, Height = plot.ActualHeight };
-                        svgExporter.Export(plot.ActualModel, saveFile);
-                    }
-                    else
-                    {
-                        ImageFormat fmt;
-                        switch (d.FilterIndex)
+                        if (1 == d.FilterIndex)
                         {
-                            case 2: fmt = ImageFormat.Bmp; break;
-                            case 3: fmt = ImageFormat.Png; break;
-                            case 4: fmt = ImageFormat.Jpeg; break;
-                            default: fmt = ImageFormat.Png; break;
+                            var plot = this.FindName("BenchmarkGraph") as OxyPlot.Wpf.Plot;
+                            var svgExporter = new OxyPlot.SvgExporter { Width = plot.ActualWidth, Height = plot.ActualHeight };
+                            svgExporter.Export(plot.ActualModel, saveFile);
                         }
-                        this.windowCapture_.Capture().Save(saveFile, fmt);
+                        else
+                        {
+                            ImageFormat fmt;
+                            switch (d.FilterIndex)
+                            {
+                                case 2: fmt = ImageFormat.Bmp; break;
+                                case 3: fmt = ImageFormat.Png; break;
+                                case 4: fmt = ImageFormat.Jpeg; break;
+                                default: fmt = ImageFormat.Png; break;
+                            }
+                            this.windowCapture_.Capture().Save(saveFile, fmt);
+                        }
                     }
                 };
                 dialog.ShowDialog();
