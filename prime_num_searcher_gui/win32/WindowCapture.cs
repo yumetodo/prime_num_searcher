@@ -279,8 +279,6 @@ namespace prime_num_searcher_gui.win32
             {
                 if (this.screenSize_ != value)
                 {
-                    RECT rect = new RECT();
-                    Api.GetWindowRect(this.windowHandle_, ref rect);
                     WINDOWPLACEMENT wp = new WINDOWPLACEMENT() { length = Marshal.SizeOf<WINDOWPLACEMENT>() };
                     Api.GetWindowPlacement(this.windowHandle_, ref wp);
                     this.screenSize_ = value;
@@ -301,12 +299,6 @@ namespace prime_num_searcher_gui.win32
         {
             Api.BitBlt(this.screenDC_, 0, 0, ScreenSize.Width, ScreenSize.Height, this.windowDC_, 7, 0, TernaryRasterOperations.SRCCOPY);
             return Image.FromHbitmap(this.ScreenHBitmap_);
-        }
-        public void NotifySizeChange()
-        {
-            RECT rect = new RECT();
-            Api.GetWindowRect(this.windowHandle_, ref rect);
-            this.ScreenSize = new Size(rect.right - rect.left, rect.bottom - rect.top);
         }
         private static BITMAPINFO CreateBITMAPINFO(Size size) {
             BITMAPINFO bmi = new BITMAPINFO();
