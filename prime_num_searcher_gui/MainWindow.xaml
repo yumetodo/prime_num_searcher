@@ -8,7 +8,6 @@
         mc:Ignorable="d"
         Title="PrimeNumSearchBenchmark"
         Height="408" Width="760" MinHeight="428" MinWidth="408"
-        Loaded="Window_Loaded"
         FontFamily="Yu Gothic Medium">
     <Grid Margin="0">
         <Grid.RowDefinitions>
@@ -61,8 +60,12 @@
             <Button
                 Content="⏹" Margin="5" Width="30" Click="StopButtonClick"
                 Visibility="{Binding StopButtonVisibility}"/>
+            <Button
+                Content="📷" Margin="5" Width="30" Click="SaveGraphButtonClick"
+                Visibility="{Binding CaptureButtonVisibility}"/>
         </StackPanel>
         <oxy:Plot
+            x:Name="BenchmarkGraph"
             Grid.Row="1"
             Title="Benchmark Results"
             Margin="0" MinHeight="280"

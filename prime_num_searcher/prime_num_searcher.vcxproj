@@ -22,7 +22,6 @@
     <ProjectGuid>{5CDB2CC9-2BEC-48F0-B185-828125B63579}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>prime_num_searcher</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
