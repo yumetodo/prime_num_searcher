@@ -45,7 +45,6 @@ namespace prime_num_searcher_gui
                 this.DataContext = this.benchmarkResultManager_;
                 //need to delay register this event because of error handling
                 this.SizeChanged += OnSizeChanged;
-                //new System.Drawing.Size((int)((this.Width - 14) * dpi / 100), (int)((this.Height - 7) * dpi / 100));
                 this.windowCapture_ = new win32.WindowCapture(this.hWnd_, new System.Drawing.Size((int)(this.Width - 14), (int)(this.Height - 7)));
             };
         }
