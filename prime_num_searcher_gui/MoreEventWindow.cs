@@ -179,7 +179,8 @@ namespace prime_num_searcher_gui
 
             return new System.Windows.Point(1.0, 1.0);
         }
-
+        public System.Drawing.Size GetCurrentScreenSize(ushort dpi) => new System.Drawing.Size((int)((this.Width - 14) * dpi / 100), (int)((this.Height - 7) * dpi / 100));
+        public System.Drawing.Size GetCurrentScreenSize() => this.GetCurrentScreenSize(this.dpiNew);
         public MoreEventWindow()
         {
             this.ResizeBegin += (object sender, EventArgs e) => { this.isBeingMoved = true; };
