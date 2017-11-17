@@ -76,7 +76,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AeroProgress.cs" />
-    <Compile Include="MoreEventWindow.cs" />
     <Compile Include="TimeUnitManager.cs" />
     <Compile Include="ValidatableDataBase.cs" />
     <Compile Include="win32\WindowCapture.cs" />
